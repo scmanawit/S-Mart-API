@@ -1,5 +1,5 @@
 import { decode } from "../helpers/auth.js";
-import { getShopBy, saveShop } from "../helpers/shop.js";
+import { getFilterValue, getShopBy, getShopsBy, saveShop } from "../helpers/shop.js";
 
 
 const create = async (request, response) => {
@@ -20,7 +20,6 @@ const create = async (request, response) => {
 }
 
 const verify = async (request, response) => {
-
     try {
         const shopId = request.params.shopId
 
@@ -30,6 +29,10 @@ const verify = async (request, response) => {
         })
         if (!shop) {
             return response.send(404, 'shop not found!')
+        }
+
+        if (shop.verifiedAt) {
+            return response.send(shop)
         }
 
         const newShop = await saveShop({ verifiedAt: new Date() }, shopId)
@@ -107,6 +110,32 @@ const banShop = async (request, response) => {
     }
 }
 
+const getAll = async (request, response) => {
+    try {
+        const userData = decode(request.headers.authorization)
+        const input = request.body
+        const filters = {}
+
+        if (input.verified !== undefined) {
+            filters.verifiedAt = getFilterValue(input.verified)
+        }
+
+        if (input.deleted !== undefined) {
+            filters.deletedAt = getFilterValue(input.deleted)
+        }
+
+        if (!userData.isAdmin) {
+            filters.userId = userData._id
+        }
+
+        const shops = await getShopsBy(filters)
+
+        return response.send(shops)
+    } catch (error) {
+        return response.send(500, 'Server error')
+    }
+}
+
 
 export default {
     create,
@@ -115,4 +144,5 @@ export default {
     update,
     deactivate,
     banShop,
+    getAll
 }

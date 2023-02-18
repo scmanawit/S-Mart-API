@@ -11,6 +11,9 @@ shopRoute.post('/register', [authenticated, user], shopController.create)
 // verify shop
 shopRoute.put('/verify/:shopId', [authenticated, admin], shopController.verify)
 
+// get all shops
+shopRoute.get('/all', [authenticated], shopController.getAll)
+
 // view specific shop
 shopRoute.get('/:shopId', [verify], shopController.view)
 

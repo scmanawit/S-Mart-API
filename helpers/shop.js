@@ -21,3 +21,11 @@ export const saveShop = async (data, shopId = null) => {
     await shop.save()
     return shop
 }
+
+export const getFilterValue = (value) => {
+    if (value) {
+        return { $ne: null }
+    }
+
+    return null
+}
