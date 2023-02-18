@@ -1,35 +1,33 @@
 import mongoose from "mongoose";
 
 const Shop = new mongoose.Schema({
-    image:{
+    image: {
         type: String,
         default: 'http://www.rcdrilling.com/wp-content/uploads/2013/12/default_image_01-1024x1024-570x321.png'
     },
-    userId:{
+    userId: {
         type: String,
         required: [true, "userId is required!"]
 
     },
-    shopName:{
+    shopName: {
         type: String,
         required: [true, "Product name is required!"]
     },
-    description:{
+    description: {
         type: String,
         required: [true, "Description is required!"]
     },
-    createdAt:{
+    createdAt: {
         type: Date,
         default: new Date()
     },
-    isVerified:{
-        type: Boolean,
-        default: false
+    verifiedAt: {
+        type: Date
     },
-    deletedAt:{
+    deletedAt: {
         type: Date,
     }
-
 })
 
 export default mongoose.model("shops", Shop)

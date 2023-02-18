@@ -6,16 +6,21 @@ import { verify } from '../middlewares/shop.js';
 const shopRoute = Router();
 
 // create new shop
-shopRoute.post('/register', [authenticated, user], shopController.createShop)
+shopRoute.post('/register', [authenticated, user], shopController.create)
 
 // verify shop
-shopRoute.put('/verify/:shopId', [authenticated, admin], shopController.verifyShop)
+shopRoute.put('/verify/:shopId', [authenticated, admin], shopController.verify)
 
 // view specific shop
-shopRoute.get('/:shopId', verify, shopController.viewMyShop)
+shopRoute.get('/:shopId', [verify], shopController.view)
 
 // update my shop
-shopRoute.put('/update/:shopId', [authenticated, user], shopController.updateMyShop)
+shopRoute.put('/update/:shopId', [authenticated, user, verify], shopController.update)
 
+// delete my shop
+shopRoute.delete('/delete/:shopId', [authenticated, user, verify], shopController.deactivate)
+
+// ban a shop
+shopRoute.delete('/admin/delete/:shopId', [authenticated, admin, verify], shopController.banShop)
 
 export default shopRoute
