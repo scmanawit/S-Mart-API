@@ -28,7 +28,7 @@ const authenticated = async (request, response, next) => {
 const user = (request, response, next) => {
     const user = decode(request.headers.authorization)
     if (user.isAdmin) {
-        response.send(401, 'Unathorized!')
+        return response.send(401, 'Unathorized!')
     }
 
     next();
@@ -37,7 +37,7 @@ const user = (request, response, next) => {
 const admin = (request, response, next) => {
     const user = decode(request.headers.authorization)
     if (!user.isAdmin) {
-        response.send(401, 'Unathorized!')
+        return response.send(401, 'Unathorized!')
     }
 
     next();
