@@ -9,6 +9,7 @@ import userRoute from './routes/userRoute.js'
 import orderRoute from './routes/orderRoute.js'
 import cartRoute from './routes/cartRoute.js'
 import shopRoute from './routes/shopRoute.js'
+import productRoute from './routes/productRoute.js'
 
 const port = 4000;
 const app = express();
@@ -36,6 +37,7 @@ app.use('/user', userRoute)
 app.use('/order', orderRoute)
 app.use('/cart', cartRoute)
 app.use('/shop', shopRoute)
+app.use('/product', productRoute)
 
 
 app.listen(port, () => console.log(`Server is running at port ${port}!`))
