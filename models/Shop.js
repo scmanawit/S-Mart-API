@@ -5,10 +5,10 @@ const Shop = new mongoose.Schema({
         type: String,
         default: 'http://www.rcdrilling.com/wp-content/uploads/2013/12/default_image_01-1024x1024-570x321.png'
     },
-    userId: {
-        type: String,
-        required: [true, "userId is required!"]
-
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+        required: [true, "user is required!"]
     },
     shopName: {
         type: String,

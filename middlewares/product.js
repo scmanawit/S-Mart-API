@@ -1,7 +1,7 @@
 import { getProduct } from "../helpers/product.js";
 
 const verifyProduct = async (request, response, next) => {
-    const product = await getProduct(request.params.productId)
+    const product = await getProduct(request.params.productId, 'shopId')
     if (!product){
         return response.send(401, 'Incorrect product id')
     }

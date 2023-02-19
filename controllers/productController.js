@@ -1,6 +1,7 @@
+import categories from "../constants/categories.js";
 import { decode } from "../helpers/auth.js";
 import { getProductsBy, saveProduct } from "../helpers/product.js";
-import { getShopBy } from "../helpers/shop.js";
+import { getShop, getShopBy } from "../helpers/shop.js";
 import { getFilterValue } from "../helpers/shop.js";
 
 const addProduct = async (request, response) => {
@@ -8,15 +9,16 @@ const addProduct = async (request, response) => {
         const shopId = request.params.shopId
         const userData = decode(request.headers.authorization)
 
-        const shop = await getShopBy({ _id: shopId })
-        if (shop.userId !== userData._id) {
+        const shop = await getShop(shopId)
+        console.log('DEBUG', shop, userData);
+        if (shop.user._id.toString() !== userData._id) {
             return response.send(401, 'Unauthorized!')
         }
 
         let input = request.body;
 
         let newProduct = await saveProduct({
-            shopId: shopId,
+            shop: shopId,
             productName: input.productName,
             description: input.description,
             price: input.price,
@@ -27,6 +29,7 @@ const addProduct = async (request, response) => {
         return response.send(newProduct)
 
     } catch (error) {
+        console.log('DEBUG', error);
         return response.send(500, "Server Error!")
 
     }
@@ -34,7 +37,14 @@ const addProduct = async (request, response) => {
 
 const viewActiveProducts = async (request, response) => {
     try {
-        const products = await getProductsBy({ deletedAt: null })
+        const categories = request.body.categories
+        const filters = {  }
+
+        if (categories) {
+            filters.categories = { $all: categories }
+        }
+
+        const products = await getProductsBy()
         return response.send(products)
     } catch (error) {
         return response.send(500, "Server Error!")
@@ -56,8 +66,8 @@ const updateProduct = async (request, response) => {
         const product = response.locals.product
 
         const shopProduct = await getShopBy({
-            _id: product.shopId,
-            userId: userData._id
+            _id: product.shop,
+            user: userData._id
         })
 
         if (!shopProduct) {
@@ -88,10 +98,10 @@ const archiveProduct = async (request, response) => {
     try {
         const userData = decode(request.headers.authorization)
         const product = response.locals.product
-        const filter = { _id: product.shopId }
+        const filter = { _id: product.shop }
 
         if (!userData.isAdmin) {
-            filter.userId = userData._id
+            filter.user = userData._id
         }
 
         const shopProduct = await getShopBy(filter)
@@ -125,6 +135,9 @@ const getAllProduct = async (request, response) => {
     }
 }
 
+const getProductCategories = (request, response) => {
+    return response.send(categories)
+}
 
 export default {
     addProduct,
@@ -132,5 +145,6 @@ export default {
     viewProduct,
     updateProduct,
     archiveProduct,
-    getAllProduct
+    getAllProduct,
+    getProductCategories
 }

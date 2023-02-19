@@ -12,6 +12,9 @@ productRoute.post('/:shopId/', [authenticated, user, verifyShop], productControl
 // view all active products
 productRoute.get('/', productController.viewActiveProducts)
 
+// view all active products
+productRoute.get('/categories', productController.getProductCategories)
+
 // view a product
 productRoute.get('/:productId', [verifyProduct], productController.viewProduct)
 

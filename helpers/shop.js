@@ -1,15 +1,15 @@
 import Shop from "../models/Shop.js"
 
 export const getShop = async (shopId) => {
-    return await Shop.findById(shopId).exec()
+    return await Shop.findById(shopId).populate('user', {createdAt: false, password: false, '__v': false}).exec()
 }
 
 export const getShopBy = async (filters) => {
-    return await Shop.findOne(filters).exec()
+    return await Shop.findOne(filters).populate('user', {createdAt: false, password: false, '__v': false}).exec()
 }
 
 export const getShopsBy = async (filters) => {
-    return await Shop.find(filters).exec()
+    return await Shop.find(filters).populate('user', {createdAt: false, password: false, '__v': false}).exec()
 }
 
 export const saveShop = async (data, shopId = null) => {

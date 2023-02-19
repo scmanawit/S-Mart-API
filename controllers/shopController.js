@@ -8,7 +8,7 @@ const create = async (request, response) => {
         let input = request.body
 
         let newShop = await saveShop({
-            userId: userData._id,
+            user: userData._id,
             shopName: input.shopName,
             description: input.description
         })
@@ -60,7 +60,7 @@ const update = async (request, response) => {
         const shopId = request.params.shopId
         const shop = response.locals.shop
 
-        if (userData._id !== shop.userId) {
+        if (userData._id !== shop.user) {
             return response.send(401, 'Unauthorized')
         }
 
@@ -83,7 +83,7 @@ const deactivate = async (request, response) => {
         const userData = decode(request.headers.authorization)
         const shop = response.locals.shop
 
-        if (userData._id !== shop.userId) {
+        if (userData._id !== shop.user) {
             return response.send(401, 'Unauthorized')
         }
 
@@ -125,7 +125,7 @@ const getAll = async (request, response) => {
         }
 
         if (!userData.isAdmin) {
-            filters.userId = userData._id
+            filters.user = userData._id
         }
 
         const shops = await getShopsBy(filters)

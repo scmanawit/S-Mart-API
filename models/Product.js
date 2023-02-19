@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import Shop from "./Shop.js";
 
 const Product = new mongoose.Schema({
-    shopId: {
-        type: String,
-        required: [true, "Shop Id is required!"]
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'shops'
     },
     image: {
         type: String,
@@ -40,7 +41,7 @@ const Product = new mongoose.Schema({
     deletedReason: {
         type: String
     },
-    reviews:[
+    reviews: [
         {
             userId: {
                 type: String,
