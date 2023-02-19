@@ -1,7 +1,7 @@
 import categories from "../constants/categories.js";
 import { decode } from "../helpers/auth.js";
 import { getProductsBy, saveProduct } from "../helpers/product.js";
-import { getShop, getShopBy } from "../helpers/shop.js";
+import { getShop, getShopBy, saveShop } from "../helpers/shop.js";
 import { getFilterValue } from "../helpers/shop.js";
 
 const addProduct = async (request, response) => {
@@ -25,6 +25,9 @@ const addProduct = async (request, response) => {
             categories: input.categories,
             stocks: input.stocks
         })
+
+        shop.products.push(newProduct._id)
+        await shop.save()
 
         return response.send(newProduct)
 
