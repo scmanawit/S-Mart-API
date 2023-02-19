@@ -4,7 +4,7 @@ import { getOrderBy } from "../helpers/order.js";
 const cart = async (request, response) => {
     try {
         const userData = decode(request.headers.authorization);
-        const myCart = await getOrderBy({ userId: userData._id, status: 'pending' })
+        const myCart = await getOrderBy({ user: userData._id, status: 'pending' })
         return response.send(myCart);
     } catch (error) {
         // console.log(error);

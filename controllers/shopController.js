@@ -59,8 +59,8 @@ const update = async (request, response) => {
         const input = request.body
         const shopId = request.params.shopId
         const shop = response.locals.shop
-
-        if (userData._id !== shop.user) {
+        
+        if (userData._id !== shop.user._id.toString()) {
             return response.send(401, 'Unauthorized')
         }
 
@@ -83,7 +83,7 @@ const deactivate = async (request, response) => {
         const userData = decode(request.headers.authorization)
         const shop = response.locals.shop
 
-        if (userData._id !== shop.user) {
+        if (userData._id !== shop.user._id.toString()) {
             return response.send(401, 'Unauthorized')
         }
 
@@ -117,7 +117,7 @@ const getAll = async (request, response) => {
         const filters = {}
 
         if (input.verified !== undefined) {
-            filters.verifiedAt = getFilterValue(input.verified)
+            filters.verifiedAt =   getFilterValue(input.verified)
         }
 
         if (input.deleted !== undefined) {

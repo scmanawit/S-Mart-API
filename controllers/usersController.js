@@ -11,7 +11,7 @@ const profile = async (request, response) => {
         if (!userData.isAdmin) {
             user = user.toJSON()
 
-            const userOrder = await getOrderBy({ userId: userData._id })
+            const userOrder = await getOrderBy({ user: userData._id })
             user.orders = userOrder
         }
 

@@ -15,7 +15,6 @@ const Order = new mongoose.Schema({
     total: {
         type: Number,
         default: 0
-        
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

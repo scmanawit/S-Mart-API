@@ -64,15 +64,15 @@ const login = async (request, response) => {
         }
 
         if (!user.isAdmin) {
-            const existingCart = await getOrderBy({ userId: user._id, status: "pending" })
+            const existingCart = await getOrderBy({ user: user._id, status: "pending" })
             if (!existingCart) {
-                await saveOrder({ userId: user._id })
+                await saveOrder({ user: user._id })
             }
         }
 
         return response.send({ auth: createAccessToken(user) })
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         return response.send(500, 'Server error!')
     }
 }

@@ -18,6 +18,9 @@ const User = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    address: {
+        type: String
+    },
     createdAt: {
         type: Date,
         default: new Date()
