@@ -1,16 +1,15 @@
-import Product from "../models/Product.js";
+import { getProduct } from "../helpers/product.js";
 
-const correctProduct = async (request, response, next) => {
-    const productId = request.params.productId
-
-    const product = await Product.findOne({_id: productId}).exec()
+const verifyProduct = async (request, response, next) => {
+    const product = await getProduct(request.params.productId)
     if (!product){
         return response.send(401, 'Incorrect product id')
     }
 
+    response.locals.product = product
     next();
 }
 
 export {
-    correctProduct
+    verifyProduct
 }

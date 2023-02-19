@@ -36,7 +36,21 @@ const Product = new mongoose.Schema({
     },
     deletedAt: {
         type: Date,
-    }
+    },
+    deletedReason: {
+        type: String
+    },
+    reviews:[
+        {
+            userId: {
+                type: String,
+                required: [true, "userId is required!"]
+            },
+            message: {
+                type: String
+            }
+        }
+    ]
 
 })
 

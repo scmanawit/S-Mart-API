@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { admin, authenticated, user } from '../middlewares/auth.js'
 import shopController from '../controllers/shopController.js'
-import { verify } from '../middlewares/shop.js';
+import { verifyShop } from '../middlewares/shop.js';
 
 const shopRoute = Router();
 
@@ -15,15 +15,15 @@ shopRoute.put('/verify/:shopId', [authenticated, admin], shopController.verify)
 shopRoute.get('/all', [authenticated], shopController.getAll)
 
 // view specific shop
-shopRoute.get('/:shopId', [verify], shopController.view)
+shopRoute.get('/:shopId', [verifyShop], shopController.view)
 
 // update my shop
-shopRoute.put('/update/:shopId', [authenticated, user, verify], shopController.update)
+shopRoute.put('/update/:shopId', [authenticated, user, verifyShop], shopController.update)
 
 // delete my shop
-shopRoute.delete('/delete/:shopId', [authenticated, user, verify], shopController.deactivate)
+shopRoute.delete('/delete/:shopId', [authenticated, user, verifyShop], shopController.deactivate)
 
 // ban a shop
-shopRoute.delete('/admin/delete/:shopId', [authenticated, admin, verify], shopController.banShop)
+shopRoute.delete('/admin/delete/:shopId', [authenticated, admin, verifyShop], shopController.banShop)
 
 export default shopRoute

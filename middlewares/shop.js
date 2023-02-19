@@ -1,6 +1,6 @@
 import { getShopBy } from "../helpers/shop.js"
 
-const verify = async (request, response, next) => {
+const verifyShop = async (request, response, next) => {
     const shopId = request.params.shopId
 
     const shop = await getShopBy({
@@ -20,5 +20,5 @@ const verify = async (request, response, next) => {
 }
 
 export {
-    verify
+    verifyShop
 }

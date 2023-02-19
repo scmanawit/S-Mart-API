@@ -1,8 +1,7 @@
-import { response } from "express";
 import { decode } from "../helpers/auth.js";
-import { getProductBy, saveProduct } from "../helpers/product.js";
+import { getProductsBy, saveProduct } from "../helpers/product.js";
 import { getShopBy } from "../helpers/shop.js";
-import Product from "../models/Product.js";
+import { getFilterValue } from "../helpers/shop.js";
 
 const addProduct = async (request, response) => {
     try {
@@ -16,16 +15,15 @@ const addProduct = async (request, response) => {
 
         let input = request.body;
 
-        let newProduct = new Product({
+        let newProduct = await saveProduct({
             shopId: shopId,
             productName: input.productName,
             description: input.description,
             price: input.price,
             categories: input.categories,
             stocks: input.stocks
-        });
+        })
 
-        await newProduct.save()
         return response.send(newProduct)
 
     } catch (error) {
@@ -36,24 +34,16 @@ const addProduct = async (request, response) => {
 
 const viewActiveProducts = async (request, response) => {
     try {
-        const products = await Product.find({ deletedAt: null }).exec()
-        // console.log(products);
+        const products = await getProductsBy({ deletedAt: null })
         return response.send(products)
     } catch (error) {
-        // console.log(error);
         return response.send(500, "Server Error!")
-
     }
 }
 
 const viewProduct = async (request, response) => {
     try {
-        const productId = request.params.productId
-        const product = await Product.findOne({ _id: productId }).exec()
-
-        return response.send(product)
-
-
+        return response.send(response.locals.product)
     } catch (error) {
         return response.send(500, "Server Error!")
 
@@ -63,9 +53,8 @@ const viewProduct = async (request, response) => {
 const updateProduct = async (request, response) => {
     try {
         const userData = decode(request.headers.authorization)
-        const productId = request.params.productId
+        const product = response.locals.product
 
-        const product = await getProductBy({ _id: productId })
         const shopProduct = await getShopBy({
             _id: product.shopId,
             userId: userData._id
@@ -87,37 +76,30 @@ const updateProduct = async (request, response) => {
             description: updatedDescription,
             price: updatedPrice,
             stocks: updatedStocks
-        },
-            productId
-        )
+        }, product._id)
 
         return response.send(productUpdated)
-
     } catch (error) {
         return response.send(500, "Server Error!")
     }
-
-
-
-
 }
 
 const archiveProduct = async (request, response) => {
     try {
         const userData = decode(request.headers.authorization)
-        const productId = request.params.productId
+        const product = response.locals.product
+        const filter = { _id: product.shopId }
 
-        const product = await getProductBy({ _id: productId })
-        const shopProduct = await getShopBy({
-            _id: product.shopId,
-            userId: userData._id
-        })
+        if (!userData.isAdmin) {
+            filter.userId = userData._id
+        }
 
+        const shopProduct = await getShopBy(filter)
         if (!shopProduct) {
             return response.send(401, 'Invalid Product Id / user Id!')
         }
 
-        const deletedProduct = await saveProduct({ deletedAt: new Date() }, productId)
+        const deletedProduct = await saveProduct({ deletedAt: new Date(), deletedReason: request.body.reason }, product._id)
         return response.send(deletedProduct)
     } catch (error) {
         return response.send(500, "Server Error!")
@@ -126,10 +108,29 @@ const archiveProduct = async (request, response) => {
 
 }
 
+const getAllProduct = async (request, response) => {
+    try {
+
+        const input = request.body
+        const filters = {}
+
+        if (input.deletedAt !== undefined) {
+            filters.deletedAt = getFilterValue(input.deleted)
+        }
+
+        const products = await getProductsBy (filters)
+        return response.send(products)
+    } catch (error) {
+        return response.send(500, 'Server error')
+    }
+}
+
+
 export default {
     addProduct,
     viewActiveProducts,
     viewProduct,
     updateProduct,
-    archiveProduct
+    archiveProduct,
+    getAllProduct
 }
