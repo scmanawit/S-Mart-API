@@ -41,14 +41,18 @@ const addProduct = async (request, response) => {
 
 const viewActiveProducts = async (request, response) => {
     try {
-        const categories = request.body.categories
-        const filters = {  }
+        const categories = request.query.categories
+        const filters = { 
+            deletedAt: null
+         }
+
+         console.log('DEBUG: categories', categories);
 
         if (categories) {
-            filters.categories = { $all: categories }
+            filters.categories = { $in: categories }
         }
 
-        const products = await getProductsBy()
+        const products = await getProductsBy(filters)
         return response.send(products)
     } catch (error) {
         return response.send(500, "Server Error!")

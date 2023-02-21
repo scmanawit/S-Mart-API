@@ -14,6 +14,9 @@ shopRoute.put('/verify/:shopId', [authenticated, admin], shopController.verify)
 // get all shops
 shopRoute.get('/all', [authenticated], shopController.getAll)
 
+// get unverified
+shopRoute.get('/unverified', [authenticated, admin], shopController.getUnverified)
+
 // view specific shop
 shopRoute.get('/:shopId', [verifyShop], shopController.view)
 

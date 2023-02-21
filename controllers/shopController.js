@@ -138,6 +138,14 @@ const getAll = async (request, response) => {
     }
 }
 
+const getUnverified = async (request, response) => {
+    try {
+        const shops = await getShopsBy({verifiedAt: null})
+        return response.send(shops)
+    } catch (error) {
+        return response.send(500, 'Server error')
+    }
+}
 const activateShop = async (request, response) => {
     try {
         const userData = decode(request.headers.authorization)
@@ -168,5 +176,6 @@ export default {
     deactivate,
     banShop,
     getAll,
-    activateShop
+    activateShop,
+    getUnverified
 }
