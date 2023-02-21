@@ -1,15 +1,15 @@
 import Order from "../models/Order.js"
 
 export const getOrder = async (orderId) => {
-    return await Order.findById(orderId, { password: false }).exec()
+    return await Order.findById(orderId, { password: false }).populate('products.product', {createdAt: false, __v: false}).exec()
 }
 
 export const getOrderBy = async (filters) => {
-    return await Order.findOne(filters).exec()
+    return await Order.findOne(filters).populate('products.product', {createdAt: false,  __v: false}).exec()
 }
 
 export const getOrdersBy = async (filters) => {
-    return await Order.find(filters).exec()
+    return await Order.find(filters).populate('products.product', {createdAt: false, __v: false}).exec()
 }
 
 export const saveOrder = async (data, orderId = null) => {

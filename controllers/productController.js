@@ -23,7 +23,8 @@ const addProduct = async (request, response) => {
             description: input.description,
             price: input.price,
             categories: input.categories,
-            stocks: input.stocks
+            stocks: input.stocks,
+            image: input.image
         })
 
         shop.products.push(newProduct._id)

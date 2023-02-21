@@ -7,11 +7,13 @@ import Order from "../models/Order.js";
 
 const orderHistory = async (request, response) => {
     try {
+        console.log('jshdgf');
         const userData = decode(request.headers.authorization)
         const myOrders = await getOrdersBy({ user: userData._id, status: 'completed' })
+        console.log('myorders', myOrders);
         return response.send(myOrders);
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         return response.send(500, "Server Error!")
     }
 

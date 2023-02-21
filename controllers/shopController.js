@@ -14,6 +14,7 @@ const create = async (request, response) => {
         })
         return response.send(newShop)
     } catch (error) {
+        console.log('DEBUG: error', error);
         return response.send(500, "Server Error!")
 
     }
