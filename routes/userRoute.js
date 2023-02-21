@@ -7,6 +7,8 @@ const userRoute = Router();
 // retrieve user profile
 userRoute.get("/profile", usersController.profile)
 
+userRoute.put("/profile", [authenticated], usersController.update)
+
 // Route to delete a user
 userRoute.delete('/deactivate/:userId', [authenticated, admin], usersController.deactivate)
 
