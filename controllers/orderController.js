@@ -32,7 +32,7 @@ const addToCart = async (request, response) => {
         const product = await getProductBy({ _id: productId })
 
         let input = request.body
-        const orderProduct = order.products.find((p) => (p.product.toString() === productId))
+        const orderProduct = order.products.find((p) => (p.product._id.toString() === productId))
 
         if (!input.quantity) {
             return response.send(422, 'Input quantity is required!')
@@ -43,15 +43,15 @@ const addToCart = async (request, response) => {
             orderProduct.quantity = orderProduct.quantity + input.quantity
             orderProduct.subTotal = orderProduct.subTotal + additionalTotal
             order.total = order.total + additionalTotal
-            const orderSave = await order.save()
-            return response.send(orderSave)
+            await order.save()
+            return response.send(order)
         }
 
         const subTotal = input.quantity * product.price
         order.total = order.total + subTotal
         order.products.push({ product: product._id, quantity: input.quantity, subTotal: subTotal })
-        await order.save()
-        return response.send(order)
+        const newOrder = await (await order.save()).populate('products.product', {createdAt: false, __v: false})
+        return response.send(newOrder)
     } catch (error) {
         console.log('ERR', error);
         return response.send(500, "Server Error!")
@@ -193,9 +193,9 @@ const orderCheckout = async (request, response) => {
             user: userData._id,
         });
 
-        await newOrder.save()
+        await (await newOrder.save()).populate('products.product', {createdAt: false, __v: false})
 
-        return response.send(order)
+        return response.send(newOrder)
 
     } catch (error) {
         console.log(error);
