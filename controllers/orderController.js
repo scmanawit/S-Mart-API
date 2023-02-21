@@ -51,7 +51,7 @@ const addToCart = async (request, response) => {
         order.total = order.total + subTotal
         order.products.push({ product: product._id, quantity: input.quantity, subTotal: subTotal })
         await order.save()
-        return response.send(order.populate('products.product', {createdAt: false, __v: false}))
+        return response.send(order)
     } catch (error) {
         console.log('ERR', error);
         return response.send(500, "Server Error!")
