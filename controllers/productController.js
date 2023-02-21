@@ -83,13 +83,15 @@ const updateProduct = async (request, response) => {
         const updatedDescription = request.body.description
         const updatedPrice = request.body.price
         const updatedStocks = request.body.stocks
+        const updatedCategories = request.body.categories
 
         const productUpdated = await saveProduct({
             image: updatedImage,
             productName: updatedProductName,
             description: updatedDescription,
             price: updatedPrice,
-            stocks: updatedStocks
+            stocks: updatedStocks,
+            categories: updatedCategories
         }, product._id)
 
         return response.send(productUpdated)
@@ -143,6 +145,28 @@ const getProductCategories = (request, response) => {
     return response.send(categories)
 }
 
+const activateProduct = async (request, response) => {
+    try {
+        const userData = decode(request.headers.authorization)
+        const product = response.locals.product
+        const filter = { _id: product.shop }
+
+        if (!userData.isAdmin) {
+            filter.user = userData._id
+        }
+
+        const shopProduct = await getShopBy(filter)
+        if (!shopProduct) {
+            return response.send(401, 'Invalid Product Id / user Id!')
+        }
+
+        const activatedProduct = await saveProduct({ deletedAt: null, deletedReason: null }, product._id)
+        return response.send(activatedProduct)
+    } catch (error) {
+        return response.send(500, "Server Error!")
+    }
+}
+
 export default {
     addProduct,
     viewActiveProducts,
@@ -150,5 +174,6 @@ export default {
     updateProduct,
     archiveProduct,
     getAllProduct,
-    getProductCategories
+    getProductCategories,
+    activateProduct
 }

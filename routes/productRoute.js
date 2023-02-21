@@ -24,4 +24,7 @@ productRoute.put('/:productId', [authenticated, user, verifyProduct], productCon
 // archive Product
 productRoute.delete('/:productId', [authenticated, verifyProduct], productController.archiveProduct)
 
+// unarchive a product
+productRoute.put('/activate/:productId', [authenticated, user, verifyProduct], productController.activateProduct)
+
 export default productRoute

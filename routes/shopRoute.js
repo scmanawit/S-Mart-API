@@ -26,4 +26,7 @@ shopRoute.delete('/delete/:shopId', [authenticated, user, verifyShop], shopContr
 // ban a shop
 shopRoute.delete('/admin/delete/:shopId', [authenticated, admin, verifyShop], shopController.banShop)
 
+// activate a shop
+shopRoute.put('/activate/:shopId', [authenticated, user], shopController.activateShop)
+
 export default shopRoute

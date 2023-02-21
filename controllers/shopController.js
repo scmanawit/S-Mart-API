@@ -1,5 +1,6 @@
 import { decode } from "../helpers/auth.js";
-import { getFilterValue, getShopBy, getShopsBy, saveShop } from "../helpers/shop.js";
+import { getFilterValue, getShopBy, getShopsBy, saveShop, getShop} from "../helpers/shop.js";
+
 
 
 const create = async (request, response) => {
@@ -137,6 +138,27 @@ const getAll = async (request, response) => {
     }
 }
 
+const activateShop = async (request, response) => {
+    try {
+        const userData = decode(request.headers.authorization)
+        const shopId = request.params.shopId
+
+        const shop = await getShop(shopId)
+
+        console.log('sdfsd', shop);
+        if (userData._id !== shop.user._id.toString()) {
+            return response.send(401, 'Unauthorized')
+        }
+
+        const newShop = await saveShop({deletedAt: null}, shop)
+        return response.send(newShop)
+
+    } catch (error) {
+        console.log(error);
+        return response.send(500, 'Server error')
+    }
+}
+
 
 export default {
     create,
@@ -145,5 +167,6 @@ export default {
     update,
     deactivate,
     banShop,
-    getAll
+    getAll,
+    activateShop
 }
