@@ -127,7 +127,7 @@ const changeQuantity = async (request, response) => {
 
         let productIndex = null
         const orderProduct = order.products.find((p, index) => {
-            if (p.product.toString() === productIdToUpdate) {
+            if (p.product._id.toString() === productIdToUpdate) {
                 productIndex = index
                 return true
             }
@@ -135,7 +135,7 @@ const changeQuantity = async (request, response) => {
             return false
         })
         if (!orderProduct) {
-            return response.send('Product does not exist! add the Product to cart')
+            return response.send(422, 'Product does not exist! add the Product to cart')
         }
         order.total = order.total - orderProduct.subTotal
 
@@ -148,7 +148,7 @@ const changeQuantity = async (request, response) => {
         orderProduct.subTotal = orderProduct.quantity * product.price
         order.total = order.total + orderProduct.subTotal
 
-        const orderSave = await order.save()
+        const orderSave = await (await order.save()).populate('products.product', {createdAt: false, __v: false})
 
         return response.send(orderSave)
 

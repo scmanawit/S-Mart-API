@@ -52,7 +52,8 @@ const viewActiveProducts = async (request, response) => {
             filters.categories = { $in: categories }
         }
 
-        const products = await getProductsBy(filters)
+        let products = await getProductsBy(filters)
+        products = products.filter(product => (!product?.shop?.deletedAt))
         return response.send(products)
     } catch (error) {
         return response.send(500, "Server Error!")
