@@ -7,7 +7,6 @@ const cart = async (request, response) => {
         const myCart = await getOrderBy({ user: userData._id, status: 'pending' })
         return response.send(myCart);
     } catch (error) {
-        // console.log(error);
         return response.send(500, "There was an error! Please try again!")
     }
 

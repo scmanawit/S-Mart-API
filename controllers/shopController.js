@@ -15,7 +15,6 @@ const create = async (request, response) => {
         })
         return response.send(newShop)
     } catch (error) {
-        console.log('DEBUG: error', error);
         return response.send(500, "Server Error!")
 
     }
@@ -40,7 +39,6 @@ const verify = async (request, response) => {
         const newShop = await saveShop({ verifiedAt: new Date() }, shopId)
         return response.send(newShop)
     } catch (error) {
-        console.log(error);
         return response.send(500, "Server Error!")
 
     }
@@ -107,7 +105,6 @@ const banShop = async (request, response) => {
         return response.send(shopDeleted)
 
     } catch (error) {
-        console.log(error)
         return response.send(500, 'Server error')
     }
 }
@@ -153,7 +150,6 @@ const activateShop = async (request, response) => {
 
         const shop = await getShop(shopId)
 
-        console.log('sdfsd', shop);
         if (userData._id !== shop.user._id.toString()) {
             return response.send(401, 'Unauthorized')
         }
@@ -162,7 +158,6 @@ const activateShop = async (request, response) => {
         return response.send(newShop)
 
     } catch (error) {
-        console.log(error);
         return response.send(500, 'Server error')
     }
 }

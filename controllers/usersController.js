@@ -18,7 +18,6 @@ const profile = async (request, response) => {
 
         return response.send(user)
     } catch (error) {
-        // console.log(error);
         return response.send(500, "There was an error! Please try again!")
     }
 }
@@ -50,7 +49,6 @@ const update = async (request, response) => {
 
         return response.send(newUser)
     } catch (error) {
-        console.log(error);
         return response.send(500, "There was an error! Please try again!")
     }
 }
@@ -64,7 +62,6 @@ const deactivate = async (request, response) => {
         const userDeleted = await saveUser({ deletedAt: new Date(), deactivateReason: reason }, userId)
         return response.send(userDeleted)
     } catch (error) {
-        // console.log(error);
         return response.send(500, 'Server Error')
     }
 }

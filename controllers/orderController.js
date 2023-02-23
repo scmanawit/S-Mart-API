@@ -7,13 +7,10 @@ import Order from "../models/Order.js";
 
 const orderHistory = async (request, response) => {
     try {
-        console.log('jshdgf');
         const userData = decode(request.headers.authorization)
         const myOrders = await getOrdersBy({ user: userData._id, status: 'completed' })
-        console.log('myorders', myOrders);
         return response.send(myOrders);
     } catch (error) {
-        console.log(error);
         return response.send(500, "Server Error!")
     }
 
@@ -24,10 +21,8 @@ const addToCart = async (request, response) => {
         const userData = decode(request.headers.authorization)
 
         const productId = request.params.productId
-        console.log(userData._id);
 
         const order = await getOrderBy({ user: userData._id, status: 'pending' })
-        console.log('order1', order);
 
         const product = await getProductBy({ _id: productId })
 
@@ -53,7 +48,6 @@ const addToCart = async (request, response) => {
         const newOrder = await (await order.save()).populate('products.product', {createdAt: false, __v: false})
         return response.send(newOrder)
     } catch (error) {
-        console.log('ERR', error);
         return response.send(500, "Server Error!")
     }
 }
@@ -73,7 +67,6 @@ const clearCart = async (request, response) => {
 
 
     } catch (error) {
-        console.log(error);
         return response.send(500, "Server Error!")
 
     }
@@ -105,7 +98,6 @@ const removeProduct = async (request, response) => {
         return response.send(orderSave)
 
     } catch (error) {
-        console.log(error);
         return response.send(500, "Server Error!")
     }
 
@@ -154,7 +146,6 @@ const changeQuantity = async (request, response) => {
 
 
     } catch (error) {
-        console.log('err', error);
         return response.send(500, "Server Error!")
     }
 }
@@ -164,7 +155,6 @@ const orderCheckout = async (request, response) => {
         const userData = decode(request.headers.authorization);
         let input = request.body
         const order = await getOrderBy({ user: userData._id, status: 'pending' })
-        console.log('Order 1', order);
 
         if (order.products === undefined || order.products.length === 0) {
             return response.send('Your cart is empty!')
@@ -181,7 +171,6 @@ const orderCheckout = async (request, response) => {
             return response.send (422, 'Please enter your address!')
         }
 
-        console.log('Order 2', order);
 
         order.status = 'completed';
         order.transactionDate = new Date();
@@ -198,7 +187,6 @@ const orderCheckout = async (request, response) => {
         return response.send(newOrder)
 
     } catch (error) {
-        console.log(error);
         return response.send(500, "Server Error!")
     }
 }

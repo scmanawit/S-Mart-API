@@ -15,7 +15,6 @@ const authenticated = async (request, response, next) => {
     let user = jwt.verify(token, config.JWT_SECRET)
     if (user) {
         user = await getUser(user._id)
-        // console.log('user', user);
         if (user.deletedAt) {
             return response.send(401, 'Unathorized!')
         }

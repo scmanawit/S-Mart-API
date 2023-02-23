@@ -10,7 +10,6 @@ const addProduct = async (request, response) => {
         const userData = decode(request.headers.authorization)
 
         const shop = await getShop(shopId)
-        console.log('DEBUG', shop, userData);
         if (shop.user._id.toString() !== userData._id) {
             return response.send(401, 'Unauthorized!')
         }
@@ -33,7 +32,6 @@ const addProduct = async (request, response) => {
         return response.send(newProduct)
 
     } catch (error) {
-        console.log('DEBUG', error);
         return response.send(500, "Server Error!")
 
     }
@@ -46,7 +44,6 @@ const viewActiveProducts = async (request, response) => {
             deletedAt: null
          }
 
-         console.log('DEBUG: categories', categories);
 
         if (categories) {
             filters.categories = { $in: categories }

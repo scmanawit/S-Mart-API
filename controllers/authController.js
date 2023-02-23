@@ -72,7 +72,6 @@ const login = async (request, response) => {
 
         return response.send({ auth: createAccessToken(user) })
     } catch (error) {
-        console.log(error);
         return response.send(500, 'Server error!')
     }
 }
