@@ -21,6 +21,7 @@ const register = async (request, response) => {
 
         return response.send(newUser);
     } catch (error) {
+        console.log(error);
         return response.send(500, 'Server error!')
     }
 
